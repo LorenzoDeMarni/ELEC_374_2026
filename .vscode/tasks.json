@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Verilog Simulation",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "\"C:\\iverilog\\bin\\iverilog.exe\" -o sim.out ALU.v and_or.v ALU_tb.v && \"C:\\iverilog\\bin\\vvp.exe\" sim.out && \"C:\\iverilog\\gtkwave\\bin\\gtkwave.exe\" wave.vcd"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
