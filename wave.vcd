@@ -1,0 +1,63 @@
+$date
+	Tue Jan 20 08:59:02 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	10ps
+$end
+$scope module ALU_tb $end
+$var wire 8 ! ALU_result [7:0] $end
+$var reg 8 " input_a [7:0] $end
+$var reg 8 # input_b [7:0] $end
+$var reg 4 $ opcode [3:0] $end
+$scope module ALU_instance $end
+$var wire 8 % A [7:0] $end
+$var wire 8 & B [7:0] $end
+$var wire 4 ' op [3:0] $end
+$var wire 8 ( or_result [7:0] $end
+$var wire 8 ) and_result [7:0] $end
+$var reg 8 * result [7:0] $end
+$scope module and_instance $end
+$var wire 8 + A [7:0] $end
+$var wire 8 , B [7:0] $end
+$var wire 1 - selection $end
+$var wire 8 . result [7:0] $end
+$upscope $end
+$scope module or_instance $end
+$var wire 8 / A [7:0] $end
+$var wire 8 0 B [7:0] $end
+$var wire 1 1 selection $end
+$var wire 8 2 result [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b11 2
+01
+b11 0
+b10 /
+b10 .
+1-
+b11 ,
+b10 +
+b11 *
+b10 )
+b11 (
+b0 '
+b11 &
+b10 %
+b0 $
+b11 #
+b10 "
+b11 !
+$end
+#20000
+b10 !
+b10 *
+b1 $
+b1 '
+#40000
