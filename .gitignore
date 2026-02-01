@@ -1,0 +1,12 @@
+# Compiled simulation files
+*.out
+*.vcd
+*.vvp
+
+# GTKWave files
+*.gtkw
+*.sav
+
+# OS files
+.DS_Store
+Thumbs.db
