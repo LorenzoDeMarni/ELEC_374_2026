@@ -1,10 +1,11 @@
 module ALU(input wire [7:0] A, B, input wire [3:0] op, output reg[7:0] result);
 	
 	
-	wire [7:0] and_result, or_result;
+	wire [7:0] and_result, or_result, not_result;
 	
 	and_or and_instance(A, B, 1, and_result);
 	and_or or_instance(A, B, 0, or_result);
+	assign not_result = ~A;
 	
 	always @(*) begin
 		case(op)
