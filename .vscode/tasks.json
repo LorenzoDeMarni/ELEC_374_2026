@@ -17,6 +17,20 @@
         "isDefault": true
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Test ALU",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "cd Phase1 && iverilog -g2012 -o alu_test.out ALU.v ALU_tb.v adder.v and_or.v NRDivider.v && vvp alu_test.out && gtkwave wave.vcd"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }
