@@ -110,7 +110,12 @@ bus32 main_bus(
 );
 
 //need ALU instantation
-assign ALU_result = {32'd0, Y_reg}; //placeholder - replace with actual ALU
+ALU alu_inst(
+    .A(Y_reg), 
+    .B(BusMuxOut), 
+    .op({MUL, DIV, ADD, SUB, AND, OR, /* finnish this later */}), 
+    .result(ALU_result) 
+);
     
 //InPort register (placeholder for phase 2)
 assign InPort_reg = 32'd0;

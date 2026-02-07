@@ -1,9 +1,9 @@
 `timescale 1ns/10ps
 module ALU_tb;
 
-  reg [7:0] input_a, input_b;
+  reg [31:0] input_a, input_b;
   reg [3:0] opcode;
-  wire [7:0] ALU_result;
+  wire [31:0] ALU_result;
 
   ALU ALU_instance(input_a, input_b, opcode, ALU_result);
 
@@ -12,8 +12,8 @@ module ALU_tb;
     $dumpvars;
     
     // Test values
-    input_a = 8'd20;
-    input_b = 8'd5;
+    input_a = 32'd20;
+    input_b = 32'd5;
     
     // Test each operation
     opcode = 0; #20;  // OR: 20 | 5 = 21
@@ -38,8 +38,8 @@ module ALU_tb;
     $display("DIV:  A=%d, B=%d, Result=%d (expected 4)", input_a, input_b, ALU_result);
     
     // Test shifts and rotates
-    input_a = 8'b10110010;  // 178
-    input_b = 8'd2;         // Shift amount
+    input_a = 32'b10110010;  // 178
+    input_b = 32'd2;         // Shift amount
     
     opcode = 8; #20;  // SHL: 10110010 << 2 = 11001000 (200)
     $display("SHL:  A=%b, B=%d, Result=%b (expected 11001000)", input_a, input_b, ALU_result);
