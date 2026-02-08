@@ -110,13 +110,31 @@ bus32 main_bus(
 );
 
 //need ALU instantation
+reg [3:0] alu_op;
+always @(*) begin
+    if (OR)        alu_op = 4'd0;
+    else if (AND)  alu_op = 4'd1;
+    else if (NOT)  alu_op = 4'd2;
+    else if (ADD)  alu_op = 4'd3;
+    else if (SUB)  alu_op = 4'd4;
+    else if (NEG)  alu_op = 4'd5;
+    else if (MUL)  alu_op = 4'd6;
+    else if (DIV)  alu_op = 4'd7;
+    else if (SHL)  alu_op = 4'd8;
+    else if (SHR)  alu_op = 4'd9;
+    else if (SHRA) alu_op = 4'd10;
+    else if (ROL)  alu_op = 4'd11;
+    else if (ROR)  alu_op = 4'd12;
+    else           alu_op = 4'd1;
+end
+
 ALU alu_inst(
     .A(Y_reg), 
     .B(BusMuxOut), 
-    .op({MUL, DIV, ADD, SUB, AND, OR, /* finnish this later */}), 
+    .op(alu_op), 
     .result(ALU_result) 
-);
-    
+); 
+
 //InPort register (placeholder for phase 2)
 assign InPort_reg = 32'd0;
     
