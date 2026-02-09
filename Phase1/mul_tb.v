@@ -41,7 +41,7 @@ module mul_tb;
               T2         = 4'b1001,
               T3         = 4'b1010,
               T4         = 4'b1011,
-              T5         = 4'b1100;
+              T5         = 4'b1100,
               T6         = 4'b1101;
     
     reg [3:0] Present_state = Default;
@@ -197,7 +197,7 @@ module mul_tb;
     
     initial begin
         $dumpfile("mul.vcd");
-        $dumpvars(0, mul_tub);
+        $dumpvars(0, mul_tb);
         #350;
         $display("R1 = 0x%h (expected: 0x05)", R1);
         $display("R3 = 0x%h (expected: 0x10)", R3);

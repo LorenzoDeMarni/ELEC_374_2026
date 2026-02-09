@@ -1,7 +1,7 @@
 //tests NEG R4, R7
 `timescale 1ns/10ps 
 
-module not_tb;
+module neg_tb;
 
     reg clock;
     reg clear;
@@ -36,7 +36,7 @@ module not_tb;
               T1         = 4'b1000,
               T2         = 4'b1001,
               T3         = 4'b1010,
-              T4         = 4'b1011,
+              T4         = 4'b1011;
     
     reg [3:0] Present_state = Default;
     

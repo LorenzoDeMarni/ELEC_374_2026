@@ -41,7 +41,7 @@ module div_tb;
               T2         = 4'b1001,
               T3         = 4'b1010,
               T4         = 4'b1011,
-              T5         = 4'b1100;
+              T5         = 4'b1100,
               T6         = 4'b1101;
 
     reg [3:0] Present_state = Default;
@@ -172,7 +172,7 @@ module div_tb;
             
             // T3: Y <- R5
             T3: begin
-                R5out = 1;
+                R3out = 1;
                 Yin = 1;
             end
             

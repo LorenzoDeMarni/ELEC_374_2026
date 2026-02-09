@@ -101,7 +101,7 @@ module shra_tb;
         HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
         IncPC = 0; ADD = 0; SUB = 0; AND = 0; OR = 0; SHR = 0; SHRA = 0; SHL = 0;
         ROR = 0; ROL = 0; NEG = 0; NOT = 0; MUL = 0; DIV = 0;
-        Read = 0; Mdatain = 32'h80000000;; clear = 0;
+        Read = 0; Mdatain = 32'h00000000; clear = 0;
         
         case (Present_state)
             Default: begin
