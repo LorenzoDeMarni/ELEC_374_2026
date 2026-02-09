@@ -23,8 +23,8 @@ module ALU_tb;
     $display("AND:  A=%d, B=%d, Result=%d (expected 4)", input_a, input_b, ALU_result);
     
     opcode = 2; #20;  // NOT: ~20 = 235
-    $display("NOT:  A=%d, Result=%d (expected 235)", input_a, ALU_result);
-    
+    $display("NOT: A=%d, Result=%h (expected ffffffeb)", input_a, ALU_result[31:0]);
+
     opcode = 3; #20;  // ADD: 20 + 5 = 25
     $display("ADD:  A=%d, B=%d, Result=%d (expected 25)", input_a, input_b, ALU_result);
     
@@ -32,9 +32,9 @@ module ALU_tb;
     $display("SUB:  A=%d, B=%d, Result=%d (expected 15)", input_a, input_b, ALU_result);
     
     opcode = 5; #20;  // NEG: -20 = 236 (in 8-bit unsigned)
-    $display("NEG:  A=%d, Result=%d (expected 236)", input_a, ALU_result);
-    
-    opcode = 6; // MUL #20;
+    $display("NEG:  A=%d, Result=%0d (expected -20)", input_a, $signed(ALU_result[31:0]));   
+
+    opcode = 6; #20;  // MUL: 20 * 5 = 100
     $display("MUL:  A=%d, B=%d, Result=%d (expected 100)", input_a, input_b, ALU_result);
 
     opcode = 7; #20;  // DIV: 20 / 5 = 4
