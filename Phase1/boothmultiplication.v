@@ -5,32 +5,24 @@ module booth_multiplier (
 );
 
     integer i;
-    reg signed [63:0] A;
-    reg signed [63:0] M;
-    reg signed [33:0] Q; // multiplier + extra bit
+    reg signed [64:0] temp_P; // 65-bit register to handle A, Q, and extra bit
 
     always @(*) begin
-        A = 64'sd0;
-        M = {{32{multiplicand[31]}}, multiplicand};
-        Q = {multiplier, 1'b0};
+        // Initialize: Upper 32 bits 0, lower bits multiplier, extra bit 0
+        temp_P = {32'd0, multiplier, 1'b0}; 
 
-        for (i = 0; i < 16; i = i + 1) begin
-            case (Q[2:0])
-                3'b001,
-                3'b010: A = A + M;
-                3'b011: A = A + (M << 1);
-                3'b100: A = A - (M << 1);
-                3'b101,
-                3'b110: A = A - M;
+        for (i = 0; i < 32; i = i + 1) begin
+            case (temp_P[1:0])
+                2'b01: temp_P[64:33] = temp_P[64:33] + multiplicand;
+                2'b10: temp_P[64:33] = temp_P[64:33] - multiplicand;
                 default: ;
             endcase
-
-            // Arithmetic right shift by 2
-            Q = {A[1:0], Q[33:2]};
-            A = {A[63], A[63], A[63:2]};
+            // Arithmetic Right Shift
+            temp_P = {temp_P[64], temp_P[64:1]};
         end
     end
 
-    assign product = A;
+    // Assign the result (excluding the extra bit at bit 0)
+    assign product = temp_P[64:1]; 
 
 endmodule
