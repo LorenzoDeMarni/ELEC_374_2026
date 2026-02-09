@@ -109,8 +109,25 @@ bus32 main_bus(
     .BusMuxOut(BusMuxOut)
 );
 
-//need ALU instantation
-assign ALU_result = {32'd0, Y_reg}; //placeholder - replace with actual ALU
+//ALU instantiation
+ALU alu_instance(
+    .A(Y_reg),
+    .B(BusMuxOut),
+    .AND(AND),
+    .OR(OR),
+    .NOT(NOT),
+    .NEG(NEG),
+    .ADD(ADD),
+    .SUB(SUB),
+    .MUL(MUL),
+    .DIV(DIV),
+    .SHR(SHR),
+    .SHRA(SHRA),
+    .SHL(SHL),
+    .ROR(ROR),
+    .ROL(ROL),
+    .result(ALU_result)
+);
     
 //InPort register (placeholder for phase 2)
 assign InPort_reg = 32'd0;
