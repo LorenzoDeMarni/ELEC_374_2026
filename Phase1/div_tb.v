@@ -1,7 +1,7 @@
-//tests AND R2, R5, R6
+//tests DIV R3, R1
 `timescale 1ns/10ps 
 
-module datapath_tb;
+module div_tb;
 
     reg clock;
     reg clear;
@@ -42,7 +42,8 @@ module datapath_tb;
               T3         = 4'b1010,
               T4         = 4'b1011,
               T5         = 4'b1100;
-    
+              T6         = 4'b1101;
+
     reg [3:0] Present_state = Default;
     
     //instantiate DUT (device under test)
@@ -91,6 +92,7 @@ module datapath_tb;
             T2:         Present_state = T3;
             T3:         Present_state = T4;
             T4:         Present_state = T5;
+            T5:         Present_state = T6;
         endcase
     end
     
@@ -112,26 +114,26 @@ module datapath_tb;
                 clear = 1;  //reset all registers
             end
             
-            //load R5 with 0x34
+            //load R1 with 0x05
             Reg_load1a: begin
-                Mdatain = 32'h00000034;
+                Mdatain = 32'h00000005;  // divisor = 5
                 Read = 1;
                 MDRin = 1;
             end
             Reg_load1b: begin
                 MDRout = 1;
-                R5in = 1;
+                R1in = 1;
             end
-            
-            //load R6 with 0x45
+
+            //load R3 with 0x14
             Reg_load2a: begin
-                Mdatain = 32'h00000045;
+                Mdatain = 32'h00000014;  // dividend = 20
                 Read = 1;
                 MDRin = 1;
             end
             Reg_load2b: begin
                 MDRout = 1;
-                R6in = 1;
+                R3in = 1;
             end
             
             //load R2 with 0x67 (will be overwritten by AND result)
@@ -176,27 +178,31 @@ module datapath_tb;
             
             // T4: Z <- R5 AND R6
             T4: begin
-                R6out = 1;
-                AND = 1;
+                R1out = 1;
+                DIV = 1;
                 Zin = 1;
             end
             
             // T5: R2 <- Z
             T5: begin
                 Zlowout = 1;
-                R2in = 1;
+                LOin = 1;
+            end
+            T6: begin
+                Zhighout = 1;
+                HIin = 1;
             end
         endcase
     end
     
     initial begin
-        $dumpfile("datapath.vcd");
-        $dumpvars(0, datapath_tb);
-        #300;
-        $display("Simulation complete");
-        $display("R5 = 0x%h (expected: 0x34)", R5);
-        $display("R6 = 0x%h (expected: 0x45)", R6);
-        $display("R2 = 0x%h (expected: 0x34 AND 0x45 = 0x04)", R2);
+        $dumpfile("div.vcd");
+        $dumpvars(0, div_tb);
+        #350;
+        $display("R1 = 0x%h (divisor: 0x05)", R1);
+        $display("R3 = 0x%h (dividend: 0x14)", R3);
+        $display("LO = 0x%h (quotient, expected: 0x04)", LO);
+        $display("HI = 0x%h (remainder, expected: 0x00)", HI);
         $finish;
     end
 

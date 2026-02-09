@@ -14,7 +14,7 @@ module datapath(
     //ALU control signals
     input wire IncPC, ADD, SUB, AND, OR, SHR, SHRA, SHL, ROR, ROL, NEG, NOT, MUL, DIV,
     
-    // Memory interface (Phase 1: simulation only)
+    //memory interface (Phase 1: simulation only)
     input wire Read,
     input wire [31:0] Mdatain,
     
