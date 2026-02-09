@@ -24,9 +24,15 @@ module ALU(
 	assign shift_right_arithmetic_result = $signed(A) >>> B[4:0];
 	assign rotate_left_result = (A << B[4:0]) | (A >> (32 - B[4:0]));
 	assign rotate_right_result = (A >> B[4:0]) | (A << (32 - B[4:0]));
-	
-	// ADD: use structural ripple-carry adder 
 	adder add_instance(A, B, add_result);
+    
+    wire [31:0] neg_B = -B;
+    adder sub_instance(A, neg_B, sub_result);
+    
+    booth_multiplier mul_instance(A, B, mul_result);
+    
+    NRDivider div_instance(A, B, div_quotient, div_remainder);
+
 	
 	// SUB: A - B = A + (-B)
 	assign neg_B = -B;

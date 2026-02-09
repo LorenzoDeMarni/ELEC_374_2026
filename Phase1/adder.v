@@ -6,7 +6,6 @@ output [31:0] Result;
 
 reg [31:0] Result;
 reg [32:0] LocalCarry;
-
 integer i;
 
 always@(A or B)

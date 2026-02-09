@@ -12,8 +12,8 @@ module ALU_tb;
     $dumpvars;
     
     // Test values
-    input_a = 8'd20;
-    input_b = 8'd5;
+    input_a = 32'd20;
+    input_b = 32'd5;
     
     // Test each operation
     opcode = 0; #20;  // OR: 20 | 5 = 21
@@ -23,8 +23,8 @@ module ALU_tb;
     $display("AND:  A=%d, B=%d, Result=%d (expected 4)", input_a, input_b, ALU_result);
     
     opcode = 2; #20;  // NOT: ~20 = 235
-    $display("NOT:  A=%d, Result=%d (expected 235)", input_a, ALU_result);
-    
+    $display("NOT: A=%d, Result=%h (expected ffffffeb)", input_a, ALU_result[31:0]);
+
     opcode = 3; #20;  // ADD: 20 + 5 = 25
     $display("ADD:  A=%d, B=%d, Result=%d (expected 25)", input_a, input_b, ALU_result);
     
@@ -32,14 +32,17 @@ module ALU_tb;
     $display("SUB:  A=%d, B=%d, Result=%d (expected 15)", input_a, input_b, ALU_result);
     
     opcode = 5; #20;  // NEG: -20 = 236 (in 8-bit unsigned)
-    $display("NEG:  A=%d, Result=%d (expected 236)", input_a, ALU_result);
-    
+    $display("NEG:  A=%d, Result=%0d (expected -20)", input_a, $signed(ALU_result[31:0]));   
+
+    opcode = 6; #20;  // MUL: 20 * 5 = 100
+    $display("MUL:  A=%d, B=%d, Result=%d (expected 100)", input_a, input_b, ALU_result);
+
     opcode = 7; #20;  // DIV: 20 / 5 = 4
     $display("DIV:  A=%d, B=%d, Result=%d (expected 4)", input_a, input_b, ALU_result);
-    
+   
     // Test shifts and rotates
-    input_a = 8'b10110010;  // 178
-    input_b = 8'd2;         // Shift amount
+    input_a = 32'b10110010;  // 178
+    input_b = 32'd2;         // Shift amount
     
     opcode = 8; #20;  // SHL: 10110010 << 2 = 11001000 (200)
     $display("SHL:  A=%b, B=%d, Result=%b (expected 11001000)", input_a, input_b, ALU_result);
