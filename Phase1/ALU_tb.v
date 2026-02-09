@@ -3,7 +3,7 @@ module ALU_tb;
 
   reg [31:0] input_a, input_b;
   reg [3:0] opcode;
-  wire [31:0] ALU_result;
+  wire [63:0] ALU_result;
 
   ALU ALU_instance(input_a, input_b, opcode, ALU_result);
 
@@ -34,9 +34,12 @@ module ALU_tb;
     opcode = 5; #20;  // NEG: -20 = 236 (in 8-bit unsigned)
     $display("NEG:  A=%d, Result=%d (expected 236)", input_a, ALU_result);
     
+    opcode = 6; // MUL #20;
+    $display("MUL:  A=%d, B=%d, Result=%d (expected 100)", input_a, input_b, ALU_result);
+
     opcode = 7; #20;  // DIV: 20 / 5 = 4
     $display("DIV:  A=%d, B=%d, Result=%d (expected 4)", input_a, input_b, ALU_result);
-    
+   
     // Test shifts and rotates
     input_a = 32'b10110010;  // 178
     input_b = 32'd2;         // Shift amount
