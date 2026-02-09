@@ -3,7 +3,7 @@ module ALU_tb;
 
   reg [31:0] input_a, input_b;
   reg [3:0] opcode;
-  wire [63:0] ALU_result;
+  wire [3`:0] ALU_result;
 
   ALU ALU_instance(input_a, input_b, opcode, ALU_result);
 

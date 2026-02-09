@@ -1,7 +1,7 @@
-//tests AND R2, R5, R6
+//tests NEG R4, R7
 `timescale 1ns/10ps 
 
-module datapath_tb;
+module neg_tb;
 
     reg clock;
     reg clear;
@@ -32,16 +32,11 @@ module datapath_tb;
     parameter Default    = 4'b0000,
               Reg_load1a = 4'b0001,
               Reg_load1b = 4'b0010,
-              Reg_load2a = 4'b0011,
-              Reg_load2b = 4'b0100,
-              Reg_load3a = 4'b0101,
-              Reg_load3b = 4'b0110,
               T0         = 4'b0111,
               T1         = 4'b1000,
               T2         = 4'b1001,
               T3         = 4'b1010,
-              T4         = 4'b1011,
-              T5         = 4'b1100;
+              T4         = 4'b1011;
     
     reg [3:0] Present_state = Default;
     
@@ -81,16 +76,11 @@ module datapath_tb;
         case (Present_state)
             Default:    Present_state = Reg_load1a;
             Reg_load1a: Present_state = Reg_load1b;
-            Reg_load1b: Present_state = Reg_load2a;
-            Reg_load2a: Present_state = Reg_load2b;
-            Reg_load2b: Present_state = Reg_load3a;
-            Reg_load3a: Present_state = Reg_load3b;
-            Reg_load3b: Present_state = T0;
+            Reg_load1b: Present_state = T0;
             T0:         Present_state = T1;
             T1:         Present_state = T2;
             T2:         Present_state = T3;
             T3:         Present_state = T4;
-            T4:         Present_state = T5;
         endcase
     end
     
@@ -112,37 +102,15 @@ module datapath_tb;
                 clear = 1;  //reset all registers
             end
             
-            //load R5 with 0x34
+            //load R7 with 0x0000000A (10 in decimal)
             Reg_load1a: begin
-                Mdatain = 32'h00000034;
+                Mdatain = 32'h0000000A;
                 Read = 1;
                 MDRin = 1;
             end
             Reg_load1b: begin
                 MDRout = 1;
-                R5in = 1;
-            end
-            
-            //load R6 with 0x45
-            Reg_load2a: begin
-                Mdatain = 32'h00000045;
-                Read = 1;
-                MDRin = 1;
-            end
-            Reg_load2b: begin
-                MDRout = 1;
-                R6in = 1;
-            end
-            
-            //load R2 with 0x67 (will be overwritten by AND result)
-            Reg_load3a: begin
-                Mdatain = 32'h00000067;
-                Read = 1;
-                MDRin = 1;
-            end
-            Reg_load3b: begin
-                MDRout = 1;
-                R2in = 1;
+                R7in = 1;
             end
             
             // T0: instruction fetch - MAR <- PC, PC++
@@ -159,7 +127,7 @@ module datapath_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h112B0000;  //opcode for "AND R2, R5, R6"
+                Mdatain = 32'h[NEG_OPCODE];  // opcode for "NEG R4, R7"
             end
             
             // T2: IR <- MDR
@@ -168,35 +136,28 @@ module datapath_tb;
                 IRin = 1;
             end
             
-            // T3: Y <- R5
+            // T3: Z <- -R7 (NEG operation)
             T3: begin
-                R5out = 1;
-                Yin = 1;
-            end
-            
-            // T4: Z <- R5 AND R6
-            T4: begin
-                R6out = 1;
-                AND = 1;
+                R7out = 1;
+                NEG = 1;
                 Zin = 1;
             end
             
-            // T5: R2 <- Z
-            T5: begin
+            // T4: R4 <- Z
+            T4: begin
                 Zlowout = 1;
-                R2in = 1;
+                R4in = 1;
             end
         endcase
     end
     
     initial begin
-        $dumpfile("datapath.vcd");
-        $dumpvars(0, datapath_tb);
-        #300;
+        $dumpfile("neg.vcd");
+        $dumpvars(0, neg_tb);
+        #200;
         $display("Simulation complete");
-        $display("R5 = 0x%h (expected: 0x34)", R5);
-        $display("R6 = 0x%h (expected: 0x45)", R6);
-        $display("R2 = 0x%h (expected: 0x34 AND 0x45 = 0x04)", R2);
+        $display("R7 = 0x%h (expected: 0x0A)", R7);
+        $display("R4 = 0x%h (expected: -10 = 0xFFFFFFF6)", R4);
         $finish;
     end
 

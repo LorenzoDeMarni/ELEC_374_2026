@@ -1,25 +1,29 @@
-module ALU(input wire [31:0] A, B, input wire [3:0] op, output reg[63:0] result);
+module ALU(
+    input wire [31:0] A, B,
+    input wire AND, OR, NOT, NEG,
+    input wire ADD, SUB, MUL, DIV,
+    input wire SHR, SHRA, SHL, ROR, ROL,
+    output reg [63:0] result
+);
 	
+	wire [31:0] and_result, or_result, not_result, add_result, sub_result, neg_result;
+	wire [31:0] shift_left_result, shift_right_result, shift_right_arithmetic_result;
+	wire [31:0] rotate_left_result, rotate_right_result;
+	wire [63:0] mul_result;  // 64-bit for MUL!
+	wire [31:0] neg_B;
 	
-	wire [31:0] and_result, or_result, not_result, neg_result;
-    wire [31:0] add_result, sub_result;
-    wire [31:0] shift_left_result, shift_right_result, shift_right_arithmetic_result;
-    wire [31:0] rotate_left_result, rotate_right_result;
-    wire [63:0] mul_result;
-    wire [31:0] div_quotient, div_remainder;
-	
-	and_or and_instance(A, B, 1'b1, and_result);
-	and_or or_instance(A, B, 1'b0, or_result);
-
+	// Basic operations
+	assign and_result = A & B;
+	assign or_result = A | B;
 	assign not_result = ~A;
 	assign neg_result = -A;
-
+	
+	// Shifts and rotates (use B[4:0] for 32-bit shift amounts)
 	assign shift_left_result = A << B[4:0];
 	assign shift_right_result = A >> B[4:0];
 	assign shift_right_arithmetic_result = $signed(A) >>> B[4:0];
 	assign rotate_left_result = (A << B[4:0]) | (A >> (32 - B[4:0]));
 	assign rotate_right_result = (A >> B[4:0]) | (A << (32 - B[4:0]));
-
 	adder add_instance(A, B, add_result);
     
     wire [31:0] neg_B = -B;
@@ -30,23 +34,46 @@ module ALU(input wire [31:0] A, B, input wire [3:0] op, output reg[63:0] result)
     NRDivider div_instance(A, B, div_quotient, div_remainder);
 
 	
-always @(*) begin
-    case(op)
-        4'd0   :   result = {32'd0, or_result};
-        4'd1   :   result = {32'd0, and_result};
-        4'd2   :   result = {32'd0, not_result};
-        4'd3   :   result = {32'd0, add_result};
-        4'd4   :   result = {32'd0, sub_result};
-        4'd5   :   result = {32'd0, neg_result};
-        4'd6   :   result = mul_result;                     // Already 64-bit
-        4'd7   :   result = {div_remainder, div_quotient};  // HI: Remainder, LO: Quotient
-        4'd8   :   result = {32'd0, shift_left_result};
-        4'd9   :   result = {32'd0, shift_right_result};
-        4'd10  :   result = {32'd0, shift_right_arithmetic_result};
-        4'd11  :   result = {32'd0, rotate_left_result};
-        4'd12  :   result = {32'd0, rotate_right_result};
-        default:   result = 64'd0; 
-    endcase
-end
+	// SUB: A - B = A + (-B)
+	assign neg_B = -B;
+	adder sub_instance(A, neg_B, sub_result);
+	
+	// MUL: TODO - implement Booth/CSA multiplier
+	assign mul_result = 64'd0;  // 64-bit placeholder
+	
+	// DIV: use non-restoring divider
+	wire [31:0] div_quotient, div_remainder;
+	NRDivider divider_instance(A, B, div_quotient, div_remainder);
+	
+	always @(*) begin
+		if (AND)
+			result = {32'd0, and_result};
+		else if (OR)
+			result = {32'd0, or_result};
+		else if (NOT)
+			result = {32'd0, not_result};
+		else if (ADD)
+			result = {32'd0, add_result};
+		else if (SUB)
+			result = {32'd0, sub_result};
+		else if (MUL)
+			result = mul_result;  // Full 64-bit
+		else if (DIV)
+			result = {div_remainder, div_quotient};  // Upper: remainder, Lower: quotient
+		else if (NEG)
+			result = {32'd0, neg_result};
+		else if (SHR)
+			result = {32'd0, shift_right_result};
+		else if (SHRA)
+			result = {32'd0, shift_right_arithmetic_result};
+		else if (SHL)
+			result = {32'd0, shift_left_result};
+		else if (ROR)
+			result = {32'd0, rotate_right_result};
+		else if (ROL)
+			result = {32'd0, rotate_left_result};
+		else
+			result = 64'd0;
+	end
 	
 endmodule

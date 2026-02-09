@@ -18,12 +18,12 @@ module NRDivider(
         else begin
             A_abs = (dividend < 0) ? -dividend : dividend;
             B_abs = (divisor < 0) ? -divisor : divisor;
-            sign_q = dividend[31] ^ divisor[31]; // if they have different signs then this is set to true to then change the sign of quotient
+            sign_q = dividend[31] ^ divisor[31]; // Sign bit is now bit 31
 
             rem = 32'sd0;
             q = 32'd0;
             for (i = 31; i >= 0; i = i - 1) begin
-                // Shl remainder, add next bit of A_abs
+                // Shift left remainder, add next bit of A_abs
                 rem = {rem[31:0], A_abs[i]};
                 if (rem >= 0)
                     rem = rem - B_abs;
