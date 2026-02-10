@@ -127,7 +127,7 @@ module not_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[NEG_OPCODE];  // opcode for "NEG R4, R7"
+                Mdatain = 32'hF2700000;  // NOT R4, R7 (opcode 01111, Ra=R4, Rb=R7 per Mini SRC spec)
             end
             
             // T2: IR <- MDR

@@ -144,7 +144,7 @@ module rol_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[ROL_OPCODE];
+                Mdatain = 32'h08704000;  // ROL R7, R0, R4 (opcode 01000, Ra=7, Rb=0, Rc=4 per Mini SRC spec)
             end
             
             // T2: IR <- MDR

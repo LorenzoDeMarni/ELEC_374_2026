@@ -144,7 +144,7 @@ module shr_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[SHR_OPCODE];  // opcode for "SHR R7, R0, R4"
+                Mdatain = 32'h04704000;  // SHR R7, R0, R4 (opcode 00100, Ra=7, Rb=0, Rc=4 per Mini SRC spec)
             end
             
             // T2: IR <- MDR

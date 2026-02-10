@@ -35,6 +35,7 @@ module neg_tb;
               T0         = 4'b0111,
               T1         = 4'b1000,
               T2         = 4'b1001,
+              T2b        = 4'b1100,  // Y <- R7 (ALU needs operand in Y for NEG)
               T3         = 4'b1010,
               T4         = 4'b1011;
     
@@ -79,7 +80,8 @@ module neg_tb;
             Reg_load1b: Present_state = T0;
             T0:         Present_state = T1;
             T1:         Present_state = T2;
-            T2:         Present_state = T3;
+            T2:         Present_state = T2b;
+            T2b:        Present_state = T3;
             T3:         Present_state = T4;
         endcase
     end
@@ -127,7 +129,7 @@ module neg_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[NEG_OPCODE];  // opcode for "NEG R4, R7"
+                Mdatain = 32'h72700000;  // NEG R4, R7 (opcode 01110, Ra=R4, Rb=R7 per Mini SRC spec)
             end
             
             // T2: IR <- MDR
@@ -136,9 +138,14 @@ module neg_tb;
                 IRin = 1;
             end
             
-            // T3: Z <- -R7 (NEG operation)
-            T3: begin
+            // T2b: Y <- R7 (ALU A input is Y; must load before NEG)
+            T2b: begin
                 R7out = 1;
+                Yin = 1;
+            end
+            
+            // T3: Z <- -Y (NEG operation; Y already holds R7)
+            T3: begin
                 NEG = 1;
                 Zin = 1;
             end
@@ -154,7 +161,7 @@ module neg_tb;
     initial begin
         $dumpfile("neg.vcd");
         $dumpvars(0, neg_tb);
-        #200;
+        #250;
         $display("Simulation complete");
         $display("R7 = 0x%h (expected: 0x0A)", R7);
         $display("R4 = 0x%h (expected: -10 = 0xFFFFFFF6)", R4);
