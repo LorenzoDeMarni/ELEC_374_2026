@@ -19,8 +19,17 @@ module MDR(
     //generates all control signals based on the state machine
     //ex. T1 of the AND instruction, testbench sets:
     //Read = 1, 
-    //Mdatain = 0x112B0000 (the AND R2,R5,R6 opcode)
+    //Mdatain = ANDop,
     //MDRin = 1
+
+    //to load a register,
+    //the testbench places the value on Mdatain (e.g., 0x00000034)
+    //asserts Read = 1 so the MDR selects the memory input instead of the bus
+    //asserts MDRin = 1 so the MDR will latch the value
+    //on the next clock edge, MDR stores 0x34
+    //the testbench asserts MDRout = 1, putting the MDR value onto the bus
+    //it asserts R5in = 1, enabling R5 to load from the bus
+    //on the next clock edge, R5 stores 0x34
     
     //simulates fetching the instruction from memory
     //Phase 2: MAR will connect to actual RAM/ROM modules to select memory access location
