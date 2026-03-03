@@ -1,5 +1,24 @@
 module datapath(
 	input wire clock, clear,
+
+    //16 general purpose 32 bit registers
+    //special registers: HI/LO for upper/lower 32 bits of Z
+    //Z for mul/div results, 64 bit. holds ALU results
+    //PC to track instruction address
+    //IR to hold current instruction
+    //MAR (memory access register) to hold mem address for read/writes
+    //Y for first ALU operand, temprary storage
+
+    //data flows through registers via bus
+    //control signals select which register drives the bus (one 'out' signal)
+    //ontrol signals select which registers load from bus (any 'in' signals)
+    //on the clock edge, enabled registers capture the bus value
+
+    //for ALU
+    //T3: first operand goes from bus to Y register
+    //T4: second operand on bus goes to ALU input B, Y goes to ALU input A
+    //ALU computes, result goes to Z
+    //T5: result from Z goes back onto bus to destination register
 	
 	//register control signals (in)
     input wire R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in,

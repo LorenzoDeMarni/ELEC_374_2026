@@ -14,3 +14,8 @@ module register32(
     end
 
 endmodule
+
+//registers read from the bus when 'in' signal is high
+//update on the rising clock edge
+//can be cleared synchronously
+//cutput value continuously to the bus multiplexer

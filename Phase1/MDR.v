@@ -8,6 +8,23 @@ module MDR(
     output reg [31:0] q //stored value
 );
 
+    //dual input
+    //from bus for write (read=0)
+    //from mem for read (read=1)
+
+    //Phase 1: memory is simulated in the testbench
+    //the testbench acts as memory and control unit
+    //drives Mdatain with hardcoded instruction opcodes and data
+    //sets 'read' to tell MDR when to load from 'memory'
+    //generates all control signals based on the state machine
+    //ex. T1 of the AND instruction, testbench sets:
+    //Read = 1, 
+    //Mdatain = 0x112B0000 (the AND R2,R5,R6 opcode)
+    //MDRin = 1
+    
+    //simulates fetching the instruction from memory
+    //Phase 2: MAR will connect to actual RAM/ROM modules to select memory access location
+
     wire [31:0] mdr_mux_out;
     
     //select between bus and memory input
