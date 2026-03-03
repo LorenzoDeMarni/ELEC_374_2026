@@ -116,12 +116,17 @@ module datapath_tb;
       end
 
       T0: begin
-        // see if you need to de-assert these signals
-        PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
+        // Instruction fetch part 1: MAR <- PC, PC <- PC + 1
+        PCout <= 1;
+        IncPC <= 1;   // bus sees PC + 1
+        MARin <= 1;   // MAR captures PC (or PC+1 depending on design)
+        PCin  <= 1;   // PC captures PC + 1 from bus
       end
 
       T1: begin
-        Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
+        // Instruction fetch part 2: IR <- MDR (via memory)
+        Read   <= 1;
+        MDRin  <= 1;
         Mdatain <= 32'h112B0000; // opcode for “and R2, R5, R6”
       end
 
@@ -141,6 +146,15 @@ module datapath_tb;
         Zlowout <= 1; R2in <= 1;
       end
     endcase
+  end
+
+  // Add simulation termination
+  initial begin
+    $dumpfile("datapath.vcd");
+    $dumpvars(0, datapath_tb);
+    #500;  // Wait for simulation to complete
+    $display("Simulation complete");
+    $finish;
   end
 
 endmodule

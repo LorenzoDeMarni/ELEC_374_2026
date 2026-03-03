@@ -154,8 +154,8 @@ module not_tb;
     end
     
     initial begin
-        // $dumpfile("not.vcd");
-        // $dumpvars(0, not_tb);
+        $dumpfile("not.vcd");
+        $dumpvars(0, not_tb);
         #200;
         $display("R4 = 0x%h (expected: ~0x0A = 0xFFFFFFF5)", R4);
         // NOT 0x0A = flip all bits

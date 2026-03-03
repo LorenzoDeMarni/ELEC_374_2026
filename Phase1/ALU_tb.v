@@ -78,10 +78,10 @@ module ALU_tb;
     $display("SHR:  A=%b, B=%0d, Result=%b (expected 00101100)", input_a, input_b, ALU_result[31:0]);
   
     opSHR=0; opROL=1; #5; // ROL: rotate left by 2
-    $display("ROL:  A=%b, B=%0d, Result=%b", input_a, input_b, ALU_result[31:0]);
+    $display("ROL:  A=%b, B=%0d, Result=%b (expected rotate-left by 2 of A)", input_a, input_b, ALU_result[31:0]);
     
     opROL=0; opROR=1; #5; // ROR: rotate right by 2
-    $display("ROR:  A=%b, B=%0d, Result=%b", input_a, input_b, ALU_result[31:0]);
+    $display("ROR:  A=%b, B=%0d, Result=%b (expected rotate-right by 2 of A)", input_a, input_b, ALU_result[31:0]);
 
     //Test Edge Cases
     input_a = 32'd0;
@@ -101,6 +101,8 @@ module ALU_tb;
 
     input_a = -32'd20;
     input_b = 32'd5;
+    opDIV=0; opNEG=1; #5;  // NEG: -20 -> +20
+    $display("NEG:  A=%0d, Result=%0d (expected 20)", $signed(input_a), $signed(ALU_result[31:0]));
 
     opDIV=0; opADD=1; #5;  // ADD signed
     $display("ADD:  A=%0d, B=%0d, Result=%0d (expected -15)", $signed(input_a), input_b, $signed(ALU_result[31:0]));

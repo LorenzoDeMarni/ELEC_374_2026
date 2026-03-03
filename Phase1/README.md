@@ -529,25 +529,23 @@ cd Phase1
 2. **Compile** (example: ADD testbench):
 
 ```bash
-iverilog -o add_tb.out \
-  add_tb.v datapath.v ALU.v adder.v boothmultiplication.v NRDivider.v \
-  register32.v register64.v bus32.v MDR.v pc_incrementer.v
+iverilog -o ALU_tb.out ALU_tb.v datapath.v ALU.v adder.v boothmultiplication.v NRDivider.v register32.v register64.v bus32.v MDR.v pc_incrementer.v
 ```
 
 3. **Run the simulation**:
 
 ```bash
-vvp add_tb.out
+vvp ALU_tb.out
 ```
 
 This will:
 - Print `$display` lines to the terminal showing register values and expected results.
-- Produce a VCD waveform file, e.g. `add.vcd`, specified by `$dumpfile` in the testbench.
+- Produce a VCD waveform file, e.g. `ALU.vcd`, specified by `$dumpfile` in the testbench.
 
 4. **View waveforms with GTKWave (optional but great for demos)**:
 
 ```bash
-gtkwave add.vcd &
+gtkwave ALU.vcd &
 ```
 
 Repeat the same pattern for other operations, changing the filenames:

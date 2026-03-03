@@ -190,8 +190,8 @@ module sub_tb;
     end
     
     initial begin
-        // $dumpfile("sub.vcd");
-        // $dumpvars(0, sub_tb);
+        $dumpfile("sub.vcd");
+        $dumpvars(0, sub_tb);
         #300;
         $display("Simulation complete");
         $display("R5 = 0x%h (expected: 0x34)", R5);

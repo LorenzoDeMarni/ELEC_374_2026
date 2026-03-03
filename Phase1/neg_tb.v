@@ -108,7 +108,7 @@ module neg_tb;
             
             //load R7 with 0x0000000A (10 in decimal)
             Reg_load1a: begin
-                Mdatain = 32'h0000000A;
+                Mdatain = 32'h0xFFFFFFF6;
                 Read = 1;
                 MDRin = 1;
             end
@@ -161,8 +161,8 @@ module neg_tb;
     end
     
     initial begin
-        // $dumpfile("neg.vcd");
-        // $dumpvars(0, neg_tb);
+        $dumpfile("neg.vcd");
+        $dumpvars(0, neg_tb);
         #200;
         $display("Simulation complete");
         $display("R7 = 0x%h (expected: 0x0A)", R7);

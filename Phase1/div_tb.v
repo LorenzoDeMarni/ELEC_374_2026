@@ -116,7 +116,7 @@ module div_tb;
             
             //load R1 with 0x05
             Reg_load1a: begin
-                Mdatain = 32'h00000005;  // divisor = 5
+                Mdatain = 32'hFFFFFFFB;  // divisor = 5
                 Read = 1;
                 MDRin = 1;
             end
@@ -127,7 +127,7 @@ module div_tb;
 
             //load R3 with 0x14
             Reg_load2a: begin
-                Mdatain = 32'h00000014;  // dividend = 20
+                Mdatain = 32'hFFFFFFEC;  // dividend = 20
                 Read = 1;
                 MDRin = 1;
             end
@@ -147,21 +147,19 @@ module div_tb;
                 R2in = 1;
             end
             
-            // T0: instruction fetch - MAR <- PC, PC++
+            // T0: instruction fetch - MAR <- PC, PC <- PC + 4
             T0: begin
                 PCout = 1;
-                MARin = 1;
-                IncPC = 1;
-                Zin = 1;
+                IncPC = 1;   // bus sees PC + 4
+                MARin = 1;   // MAR captures current PC
+                PCin = 1;    // PC captures PC + 4 from bus
             end
             
-            // T1: PC <- Z, IR <- Mdatain
+            // T1: IR <- MDR (via memory)
             T1: begin
-                Zlowout = 1;
-                PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h112B0000;  //opcode for "AND R2, R5, R6"
+                Mdatain = 32'h112B0000;  //opcode for "DIV R3, R1"
             end
             
             // T2: IR <- MDR
@@ -196,13 +194,13 @@ module div_tb;
     end
     
     initial begin
-        // $dumpfile("div.vcd");
-        // $dumpvars(0, div_tb);
+        $dumpfile("div.vcd");
+        $dumpvars(0, div_tb);
         #350;
-        $display("R1 = 0x%h (divisor: 0x05)", R1);
-        $display("R3 = 0x%h (dividend: 0x14)", R3);
-        $display("LO = 0x%h (quotient, expected: 0x04)", LO);
-        $display("HI = 0x%h (remainder, expected: 0x00)", HI);
+        $display("R1 = 0x%h (divisor: -5)", R1);
+        $display("R3 = 0x%h (dividend: -20)", R3);
+        $display("LO = 0x%h (quotient, expected: 0x00000004)", LO);
+        $display("HI = 0x%h (remainder, expected: 0x00000000)", HI);
         $finish;
     end
 
