@@ -1,6 +1,10 @@
 module bus32(
+    //implemented as a 32-to-1 multiplexer
     //inputs from all registers to go on bus
-    //only one can be active (on bus) at a time
+    //only one can be active on bus ('out' signal high) at a time
+
+    //ex. when R5out is high and others are low, R5's value drives the bus
+    //then any register with its 'in' signal high will load that value on the next clock edge
     input wire [31:0] BusMuxIn_R0,
     input wire [31:0] BusMuxIn_R1,
     input wire [31:0] BusMuxIn_R2,
