@@ -26,9 +26,9 @@ module ALU(
 	assign rotate_right_result = (A >> B[4:0]) | (A << (32 - B[4:0]));
 
 	adder add_instance(A, B, add_result);
-    adder sub_instance(A, neg_B, sub_result);
+  adder sub_instance(A, neg_B, sub_result);
     
-    booth_multiplier mul_instance(A, B, mul_result);
+  booth_multiplier mul_instance(A, B, mul_result);
     
 	// DIV: use non-restoring divider
 	wire [31:0] div_quotient, div_remainder;
