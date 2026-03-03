@@ -177,8 +177,8 @@ module rol_tb;
     end
     
     initial begin
-        // $dumpfile("rol.vcd");
-        // $dumpvars(0, rol_tb);
+        $dumpfile("rol.vcd");
+        $dumpvars(0, rol_tb);
         #300;
         $display("Simulation complete");
         $display("R0 = 0x%h (value to rotate)", R0);

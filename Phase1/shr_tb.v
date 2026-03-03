@@ -177,8 +177,8 @@ module shr_tb;
     end
     
     initial begin
-        // $dumpfile("shr.vcd");
-        // $dumpvars(0, shr_tb);
+        $dumpfile("shr.vcd");
+        $dumpvars(0, shr_tb);
         #300;
         $display("Simulation complete");
         $display("R0 = 0x%h (value to shift)", R0);

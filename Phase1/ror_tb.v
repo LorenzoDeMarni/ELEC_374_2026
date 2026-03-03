@@ -177,8 +177,8 @@ module ror_tb;
     end
     
     initial begin
-        // $dumpfile("ror.vcd");
-        // $dumpvars(0, ror_tb);
+        $dumpfile("ror.vcd");
+        $dumpvars(0, ror_tb);
         #300;
         $display("Simulation complete");
         $display("R0 = 0x%h (value to rotate)", R0);
