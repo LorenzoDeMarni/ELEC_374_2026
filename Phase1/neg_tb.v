@@ -27,6 +27,8 @@ module neg_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter NEG_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -127,7 +129,7 @@ module neg_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[NEG_OPCODE];  // opcode for "NEG R4, R7"
+                Mdatain = NEG_OPCODE;  // opcode for "NEG R4, R7"
             end
             
             // T2: IR <- MDR
@@ -152,8 +154,8 @@ module neg_tb;
     end
     
     initial begin
-        $dumpfile("neg.vcd");
-        $dumpvars(0, neg_tb);
+        // $dumpfile("neg.vcd");
+        // $dumpvars(0, neg_tb);
         #200;
         $display("Simulation complete");
         $display("R7 = 0x%h (expected: 0x0A)", R7);

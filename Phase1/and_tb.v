@@ -190,8 +190,8 @@ module and_tb;
     end
     
     initial begin
-        $dumpfile("and.vcd");
-        $dumpvars(0, and_tb);
+        // $dumpfile("and.vcd");
+        // $dumpvars(0, and_tb);
         #300;
         $display("Simulation complete");
         $display("R5 = 0x%h (expected: 0x34)", R5);

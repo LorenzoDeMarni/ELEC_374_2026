@@ -196,8 +196,8 @@ module mul_tb;
     end
     
     initial begin
-        $dumpfile("mul.vcd");
-        $dumpvars(0, mul_tb);
+        // $dumpfile("mul.vcd");
+        // $dumpvars(0, mul_tb);
         #350;
         $display("R1 = 0x%h (expected: 0x05)", R1);
         $display("R3 = 0x%h (expected: 0x10)", R3);

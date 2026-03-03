@@ -190,8 +190,8 @@ module add_tb;
     end
     
     initial begin
-        $dumpfile("add.vcd");
-        $dumpvars(0, add_tb);
+        // $dumpfile("add.vcd");
+        // $dumpvars(0, add_tb);
         #300;
         $display("Simulation complete");
         $display("R5 = 0x%h (expected: 0x34)", R5);

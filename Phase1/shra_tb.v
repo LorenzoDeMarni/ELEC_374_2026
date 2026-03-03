@@ -27,6 +27,8 @@ module shra_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter SHRA_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -144,7 +146,7 @@ module shra_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[SHR_OPCODE];  // opcode for "SHR R7, R0, R4"
+                Mdatain = SHRA_OPCODE;  // opcode for "SHRA R7, R0, R4"
             end
             
             // T2: IR <- MDR
@@ -175,8 +177,8 @@ module shra_tb;
     end
     
     initial begin
-        $dumpfile("shra.vcd");
-        $dumpvars(0, shra_tb);
+        // $dumpfile("shra.vcd");
+        // $dumpvars(0, shra_tb);
         #300;
         $display("R7 = 0x%h (expected: 0x80000000 >>> 4 = 0xF8000000)", R7);
         // Arithmetic shift preserves sign bit!

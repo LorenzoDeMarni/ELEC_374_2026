@@ -196,8 +196,8 @@ module div_tb;
     end
     
     initial begin
-        $dumpfile("div.vcd");
-        $dumpvars(0, div_tb);
+        // $dumpfile("div.vcd");
+        // $dumpvars(0, div_tb);
         #350;
         $display("R1 = 0x%h (divisor: 0x05)", R1);
         $display("R3 = 0x%h (dividend: 0x14)", R3);

@@ -27,6 +27,8 @@ module rol_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter ROL_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -144,7 +146,7 @@ module rol_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[ROL_OPCODE];
+                Mdatain = ROL_OPCODE;
             end
             
             // T2: IR <- MDR
@@ -175,8 +177,8 @@ module rol_tb;
     end
     
     initial begin
-        $dumpfile("rol.vcd");
-        $dumpvars(0, rol_tb);
+        // $dumpfile("rol.vcd");
+        // $dumpvars(0, rol_tb);
         #300;
         $display("Simulation complete");
         $display("R0 = 0x%h (value to rotate)", R0);

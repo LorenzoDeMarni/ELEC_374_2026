@@ -27,6 +27,8 @@ module shr_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter SHR_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -144,7 +146,7 @@ module shr_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h[SHR_OPCODE];  // opcode for "SHR R7, R0, R4"
+                Mdatain = SHR_OPCODE;  // opcode for "SHR R7, R0, R4"
             end
             
             // T2: IR <- MDR
@@ -175,8 +177,8 @@ module shr_tb;
     end
     
     initial begin
-        $dumpfile("shr.vcd");
-        $dumpvars(0, shr_tb);
+        // $dumpfile("shr.vcd");
+        // $dumpvars(0, shr_tb);
         #300;
         $display("Simulation complete");
         $display("R0 = 0x%h (value to shift)", R0);
