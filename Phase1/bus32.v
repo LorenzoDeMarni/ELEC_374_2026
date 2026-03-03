@@ -1,5 +1,5 @@
 module bus32(
-    //implemented as a 32-to-1 multiplexer
+    //multiplexer
     //inputs from all registers to go on bus
     //only one can be active on bus ('out' signal high) at a time
 

@@ -170,7 +170,4 @@ assign BusMuxOut_signal = BusMuxOut;
 
 endmodule
 
-//to test, run:
-//iverilog -o test.out datapath_tb.v datapath.v register32.v register64.v bus32.v MDR.v pc_incrementer.v
-//vvp test.out
-//gtkwave datapath.vcd
+/iverilog -o add_test.out add_tb.v adder.v
