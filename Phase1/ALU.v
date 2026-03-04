@@ -13,22 +13,22 @@ module ALU(
 	wire [31:0] neg_B;
 	
 	// Basic operations
-	assign and_result = A & B;
-	assign or_result = A | B;
-	assign not_result = ~A;
-	assign neg_result = -A;
+	andFunction andInstance(A, B, and_result);
+	orFunction orInstance(A, B, or_result);
+	notFunction notInstance(A, not_result);
+	negFunction negInstance(B, neg_result);
 	
 	// Shifts and rotates (use B[4:0] for 32-bit shift amounts)
-	assign shift_left_result = A << B[4:0];
-	assign shift_right_result = A >> B[4:0];
-	assign shift_right_arithmetic_result = $signed(A) >>> B[4:0];
-	assign rotate_left_result = (A << B[4:0]) | (A >> (32 - B[4:0]));
-	assign rotate_right_result = (A >> B[4:0]) | (A << (32 - B[4:0]));
+	shiftLeft shift_left_instance(A, B[4:0], shift_left_result);
+	shiftRight shift_right_instance(A, B[4:0], shift_right_result);
+	shiftRight shift_right_arithmetic_instance({A[31], A[31:1]}, B[4:0], shift_right_arithmetic_result);  // Arithmetic shift
+	shiftLeft rotate_left_instance(A[31:0], B[4:0], rotate_left_result);  // Rotate left
+	shiftRight rotate_right_instance(A[31:0], B[4:0], rotate_right_result);  // Rotate right
 
 	adder add_instance(A, B, add_result);
-  adder sub_instance(A, neg_B, sub_result);
+  	adder sub_instance(A, neg_B, sub_result);
     
-  booth_multiplier mul_instance(A, B, mul_result);
+  	booth_multiplier mul_instance(A, B, mul_result);
     
 	// DIV: use non-restoring divider
 	wire [31:0] div_quotient, div_remainder;
