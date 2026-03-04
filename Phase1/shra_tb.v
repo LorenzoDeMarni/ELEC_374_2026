@@ -178,9 +178,9 @@ module shra_tb;
         $dumpfile("shra.vcd");
         $dumpvars(0, shra_tb);
         #300;
-        $display("R7 = 0x%h (expected: 0x80000000 >>> 4 = 0xF8000000)", R7);
+        $display("R7 = 0x%h (expected: 0xF0000000 >>> 4 = 0xF8000000)", R7);
         // Arithmetic shift preserves sign bit!
-        // 1000 0000 0000 0000 0000 0000 0000 0000 >>> 4
+        // 1111 0000 0000 0000 0000 0000 0000 0000 >>> 4
         // 1111 1000 0000 0000 0000 0000 0000 0000 (sign bit copied)
         $finish;
     end

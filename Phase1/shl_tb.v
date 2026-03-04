@@ -110,9 +110,9 @@ module shl_tb;
                 clear = 1;
             end
             
-            //load R0 with 0x0F000000 (value to shift)
+            //load R0 with 0x000000F0 (value to shift)
             Reg_load1a: begin
-                Mdatain = 32'h0F000000;
+                Mdatain = 32'h000000F0;
                 Read = 1;
                 MDRin = 1;
             end
@@ -121,9 +121,9 @@ module shl_tb;
                 R0in = 1;
             end
             
-            //load R4 with 0x00000004 (shift amount = 4)
+            //load R4 with 0x00000002 (shift amount = 2)
             Reg_load2a: begin
-                Mdatain = 32'h00000004;
+                Mdatain = 32'h00000002;
                 Read = 1;
                 MDRin = 1;
             end
@@ -179,9 +179,9 @@ module shl_tb;
         $dumpvars(0, shl_tb);
         #300;
         $display("Simulation complete");
-        $display("R0 = 0x%h (value to shift)", R0);
-        $display("R4 = 0x%h (shift amount)", R4);
-        $display("R7 = 0x%h (expected: 0x0F000000 << 4 = 0xF0000000)", R7);
+        $display("R0 = 0x%h (value to shift, expected 0x000000F0)", R0);
+        $display("R4 = 0x%h (shift amount, expected 0x00000002)", R4);
+        $display("R7 = 0x%h (expected: 0x000000F0 << 2 = 0x0000003C)", R7);
         $finish;
     end
 

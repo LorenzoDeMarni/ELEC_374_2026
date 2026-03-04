@@ -110,9 +110,9 @@ module ror_tb;
                 clear = 1;
             end
             
-            //load R0 with 0xABCD1234
+            //load R0 with 0x000000E1
             Reg_load1a: begin
-                Mdatain = 32'hABCD1234;
+                Mdatain = 32'h000000E1;
                 Read = 1;
                 MDRin = 1;
             end
@@ -121,9 +121,9 @@ module ror_tb;
                 R0in = 1;
             end
             
-            //load R4 with 0x00000008 (rotate amount = 8)
+            //load R4 with 0x00000002 (rotate amount = 2)
             Reg_load2a: begin
-                Mdatain = 32'h00000008;
+                Mdatain = 32'h00000002;
                 Read = 1;
                 MDRin = 1;
             end
@@ -179,9 +179,9 @@ module ror_tb;
         $dumpvars(0, ror_tb);
         #300;
         $display("Simulation complete");
-        $display("R0 = 0x%h (value to rotate)", R0);
-        $display("R4 = 0x%h (rotate amount)", R4);
-        $display("R7 = 0x%h (expected: 0xABCD1234 ROR 8 = 0x34ABCD12)", R7);
+        $display("R0 = 0x%h (value to rotate, expected 0x000000E1)", R0);
+        $display("R4 = 0x%h (rotate amount, expected 0x00000002)", R4);
+        $display("R7 = 0x%h (expected: 0x000000E1 ROR 2 = 0x80000038)", R7);
         $finish;
     end
 

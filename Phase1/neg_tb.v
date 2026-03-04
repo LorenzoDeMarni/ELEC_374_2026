@@ -108,7 +108,7 @@ module neg_tb;
             
             //load R7 with 0x0000000A (10 in decimal)
             Reg_load1a: begin
-                Mdatain = 32'h0xFFFFFFF6;
+                Mdatain = 32'h0000000A;
                 Read = 1;
                 MDRin = 1;
             end

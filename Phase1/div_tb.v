@@ -114,9 +114,9 @@ module div_tb;
                 clear = 1;  //reset all registers
             end
             
-            //load R1 with 0x05
+            //load R1 with 0x05 (divisor)
             Reg_load1a: begin
-                Mdatain = 32'hFFFFFFFB;  // divisor = 5
+                Mdatain = 32'h00000005;  // divisor = 5
                 Read = 1;
                 MDRin = 1;
             end
@@ -125,9 +125,9 @@ module div_tb;
                 R1in = 1;
             end
 
-            //load R3 with 0x14
+            //load R3 with 0x14 (dividend)
             Reg_load2a: begin
-                Mdatain = 32'hFFFFFFEC;  // dividend = 20
+                Mdatain = 32'h00000014;  // dividend = 20
                 Read = 1;
                 MDRin = 1;
             end
@@ -197,8 +197,8 @@ module div_tb;
         $dumpfile("div.vcd");
         $dumpvars(0, div_tb);
         #350;
-        $display("R1 = 0x%h (divisor: -5)", R1);
-        $display("R3 = 0x%h (dividend: -20)", R3);
+        $display("R1 = 0x%h (divisor: 0x00000005)", R1);
+        $display("R3 = 0x%h (dividend: 0x00000014)", R3);
         $display("LO = 0x%h (quotient, expected: 0x00000004)", LO);
         $display("HI = 0x%h (remainder, expected: 0x00000000)", HI);
         $finish;

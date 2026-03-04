@@ -104,9 +104,9 @@ module not_tb;
                 clear = 1;  //reset all registers
             end
             
-            //load R7 with 0x0000000A (10 in decimal)
+            //load R7 with 0x00000034
             Reg_load1a: begin
-                Mdatain = 32'h0000000A;
+                Mdatain = 32'h00000034;
                 Read = 1;
                 MDRin = 1;
             end
@@ -155,10 +155,10 @@ module not_tb;
         $dumpfile("not.vcd");
         $dumpvars(0, not_tb);
         #200;
-        $display("R4 = 0x%h (expected: ~0x0A = 0xFFFFFFF5)", R4);
-        // NOT 0x0A = flip all bits
-        // 0x0000000A = 0000 0000 0000 0000 0000 0000 0000 1010
-        // ~0x0000000A = 1111 1111 1111 1111 1111 1111 1111 0101 = 0xFFFFFFF5
+        $display("R4 = 0x%h (expected: ~0x34 = 0xFFFFFFCB)", R4);
+        // NOT 0x34 = flip all bits
+        // 0x00000034 = 0000 0000 0000 0000 0000 0000 0011 0100
+        // ~0x00000034 = 1111 1111 1111 1111 1111 1111 1100 1011 = 0xFFFFFFCB
         $finish;
     end
 
