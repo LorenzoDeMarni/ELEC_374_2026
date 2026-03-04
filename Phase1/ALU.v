@@ -19,11 +19,11 @@ module ALU(
 	negFunction negInstance(A, neg_result);
 	
 	// Shifts and rotates (use B[4:0] for 32-bit shift amounts)
-	shiftLeft shift_left_instance(A, B[4:0], shift_left_result);
-	shiftRight shift_right_instance(A, B[4:0], shift_right_result);
-	shiftRight shift_right_arithmetic_instance({A[31], A[31:1]}, B[4:0], shift_right_arithmetic_result);  // Arithmetic shift
-	shiftLeft rotate_left_instance(A[31:0], B[4:0], rotate_left_result);  // Rotate left
-	shiftRight rotate_right_instance(A[31:0], B[4:0], rotate_right_result);  // Rotate right
+	shiftLeft            shift_left_instance(A, B[4:0], shift_left_result);
+	shiftRight           shift_right_instance(A, B[4:0], shift_right_result);
+	shiftRightArithmetic shift_right_arithmetic_instance(A, B[4:0], shift_right_arithmetic_result);
+	rotateLeft           rotate_left_instance(A, B[4:0], rotate_left_result);
+	rotateRight          rotate_right_instance(A, B[4:0], rotate_right_result);
 
 	negFunction neg_B_instance2(B, neg_B);  // Get -B for subtraction
 

@@ -110,9 +110,9 @@ module rol_tb;
                 clear = 1;
             end
             
-            //load R0 with 0x000000E1
+            //load R0 with 0xC0000001 (value to rotate)
             Reg_load1a: begin
-                Mdatain = 32'h000000E1;
+                Mdatain = 32'hC0000001;
                 Read = 1;
                 MDRin = 1;
             end
@@ -179,9 +179,9 @@ module rol_tb;
         $dumpvars(0, rol_tb);
         #300;
         $display("Simulation complete");
-        $display("R0 = 0x%h (value to rotate, expected 0x000000E1)", R0);
+        $display("R0 = 0x%h (value to rotate, expected 0xC0000001)", R0);
         $display("R4 = 0x%h (rotate amount, expected 0x00000002)", R4);
-        $display("R7 = 0x%h (expected: 0x000000E1 ROL 2 = 0x00000384)", R7);
+        $display("R7 = 0x%h (expected: 0xC0000001 ROL 2 = 0x00000007)", R7);
         $finish;
     end
 
