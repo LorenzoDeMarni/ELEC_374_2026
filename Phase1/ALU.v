@@ -16,7 +16,7 @@ module ALU(
 	andFunction andInstance(A, B, and_result);
 	orFunction orInstance(A, B, or_result);
 	notFunction notInstance(A, not_result);
-	negFunction negInstance(B, neg_result);
+	negFunction negInstance(A, neg_result);
 	
 	// Shifts and rotates (use B[4:0] for 32-bit shift amounts)
 	shiftLeft shift_left_instance(A, B[4:0], shift_left_result);
@@ -24,6 +24,8 @@ module ALU(
 	shiftRight shift_right_arithmetic_instance({A[31], A[31:1]}, B[4:0], shift_right_arithmetic_result);  // Arithmetic shift
 	shiftLeft rotate_left_instance(A[31:0], B[4:0], rotate_left_result);  // Rotate left
 	shiftRight rotate_right_instance(A[31:0], B[4:0], rotate_right_result);  // Rotate right
+
+	negFunction neg_B_instance2(B, neg_B);  // Get -B for subtraction
 
 	adder add_instance(A, B, add_result);
   	adder sub_instance(A, neg_B, sub_result);
@@ -34,10 +36,7 @@ module ALU(
 	wire [31:0] div_quotient, div_remainder;
     NRDivider div_instance(A, B, div_quotient, div_remainder);
 
-	
-	// SUB: A - B = A + (-B)
-	assign neg_B = -B;
-		
+				
 	
 	always @(*) begin
 		if (opAND)
