@@ -147,12 +147,12 @@ module div_tb;
                 R2in = 1;
             end
             
-            // T0: instruction fetch - MAR <- PC, PC <- PC + 4
+            // T0: instruction fetch - MAR <- PC, PC <- PC + 1
             T0: begin
                 PCout = 1;
-                IncPC = 1;   // bus sees PC + 4
-                MARin = 1;   // MAR captures current PC
-                PCin = 1;    // PC captures PC + 4 from bus
+                IncPC = 1;   // bus sees PC + 1
+                MARin = 1;   // MAR captures PC+1 from bus
+                PCin = 1;    // PC captures PC + 1 from bus
             end
             
             // T1: IR <- MDR (via memory)

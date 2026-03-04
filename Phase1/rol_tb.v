@@ -132,18 +132,16 @@ module rol_tb;
                 R4in = 1;
             end
             
-            // T0: instruction fetch
+            // T0: instruction fetch - MAR <- PC, PC <- PC + 1
             T0: begin
                 PCout = 1;
-                MARin = 1;
-                IncPC = 1;
-                Zin = 1;
+                IncPC = 1;   // bus sees PC + 1
+                MARin = 1;   // MAR captures PC+1 from bus
+                PCin = 1;    // PC captures PC + 1 from bus
             end
             
-            // T1: PC <- Z, IR <- Mdatain
+            // T1: IR <- Mdatain (via memory)
             T1: begin
-                Zlowout = 1;
-                PCin = 1;
                 Read = 1;
                 MDRin = 1;
                 Mdatain = ROL_OPCODE;
