@@ -190,8 +190,8 @@ module or_tb;
     end
     
     initial begin
-        $dumpfile("or.vcd");
-        $dumpvars(0, or_tb);
+        // $dumpfile("or.vcd");
+        // $dumpvars(0, or_tb);
         #300;
         $display("Simulation complete");
         $display("R5 = 0x%h (expected: 0x34)", R5);

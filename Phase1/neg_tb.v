@@ -27,6 +27,8 @@ module neg_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter NEG_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -129,7 +131,7 @@ module neg_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h72700000;  // NEG R4, R7 (opcode 01110, Ra=R4, Rb=R7 per Mini SRC spec)
+                Mdatain = NEG_OPCODE;  // opcode for "NEG R4, R7"
             end
             
             // T2: IR <- MDR
@@ -159,9 +161,9 @@ module neg_tb;
     end
     
     initial begin
-        $dumpfile("neg.vcd");
-        $dumpvars(0, neg_tb);
-        #250;
+        // $dumpfile("neg.vcd");
+        // $dumpvars(0, neg_tb);
+        #200;
         $display("Simulation complete");
         $display("R7 = 0x%h (expected: 0x0A)", R7);
         $display("R4 = 0x%h (expected: -10 = 0xFFFFFFF6)", R4);

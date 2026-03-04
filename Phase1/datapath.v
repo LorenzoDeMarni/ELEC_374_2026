@@ -132,19 +132,19 @@ bus32 main_bus(
 ALU alu_instance(
     .A(Y_reg),
     .B(BusMuxOut),
-    .AND(AND),
-    .OR(OR),
-    .NOT(NOT),
-    .NEG(NEG),
-    .ADD(ADD),
-    .SUB(SUB),
-    .MUL(MUL),
-    .DIV(DIV),
-    .SHR(SHR),
-    .SHRA(SHRA),
-    .SHL(SHL),
-    .ROR(ROR),
-    .ROL(ROL),
+    .opAND(AND),
+    .opOR(OR),
+    .opNOT(NOT),
+    .opNEG(NEG),
+    .opADD(ADD),
+    .opSUB(SUB),
+    .opMUL(MUL),
+    .opDIV(DIV),
+    .opSHR(SHR),
+    .opSHRA(SHRA),
+    .opSHL(SHL),
+    .opROR(ROR),
+    .opROL(ROL),
     .result(ALU_result)
 );
     
@@ -170,7 +170,4 @@ assign BusMuxOut_signal = BusMuxOut;
 
 endmodule
 
-//to test, run:
-//iverilog -o test.out datapath_tb.v datapath.v register32.v register64.v bus32.v MDR.v pc_incrementer.v
-//vvp test.out
-//gtkwave datapath.vcd
+//iverilog -o add_test.out add_tb.v adder.v

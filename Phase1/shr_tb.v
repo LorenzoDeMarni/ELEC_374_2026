@@ -27,6 +27,8 @@ module shr_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter SHR_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -144,7 +146,7 @@ module shr_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'h04704000;  // SHR R7, R0, R4 (opcode 00100, Ra=7, Rb=0, Rc=4 per Mini SRC spec)
+                Mdatain = SHR_OPCODE;  // opcode for "SHR R7, R0, R4"
             end
             
             // T2: IR <- MDR

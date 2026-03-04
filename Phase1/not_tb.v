@@ -27,6 +27,8 @@ module not_tb;
     wire [31:0] HI, LO, PC_out, IR, MAR, Y;
     wire [63:0] Z;
     wire [31:0] BusMuxOut_signal;
+
+    parameter NOT_OPCODE = 32'hXXXXXXXX;
     
     //state machine
     parameter Default    = 4'b0000,
@@ -127,7 +129,7 @@ module not_tb;
                 PCin = 1;
                 Read = 1;
                 MDRin = 1;
-                Mdatain = 32'hF2700000;  // NOT R4, R7 (opcode 01111, Ra=R4, Rb=R7 per Mini SRC spec)
+                Mdatain = NOT_OPCODE;  // opcode for "NOT R4, R7"
             end
             
             // T2: IR <- MDR
@@ -152,8 +154,8 @@ module not_tb;
     end
     
     initial begin
-        $dumpfile("not.vcd");
-        $dumpvars(0, not_tb);
+        // $dumpfile("not.vcd");
+        // $dumpvars(0, not_tb);
         #200;
         $display("R4 = 0x%h (expected: ~0x0A = 0xFFFFFFF5)", R4);
         // NOT 0x0A = flip all bits

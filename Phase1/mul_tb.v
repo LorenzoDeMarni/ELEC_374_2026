@@ -116,7 +116,7 @@ module mul_tb;
             
             //load R1 with 0x05
             Reg_load1a: begin
-                Mdatain = 32'h00000005;
+                Mdatain = 32'hFFFFFFFB;
                 Read = 1;
                 MDRin = 1;
             end
