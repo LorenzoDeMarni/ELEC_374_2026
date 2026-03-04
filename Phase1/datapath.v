@@ -170,4 +170,4 @@ assign BusMuxOut_signal = BusMuxOut;
 
 endmodule
 
-/iverilog -o add_test.out add_tb.v adder.v
+//iverilog -o add_test.out add_tb.v adder.v

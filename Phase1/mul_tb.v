@@ -116,7 +116,7 @@ module mul_tb;
             
             //load R1 with 0x05
             Reg_load1a: begin
-                Mdatain = 32'h00000005;
+                Mdatain = 32'hFFFFFFFB;
                 Read = 1;
                 MDRin = 1;
             end
@@ -196,8 +196,8 @@ module mul_tb;
     end
     
     initial begin
-        // $dumpfile("mul.vcd");
-        // $dumpvars(0, mul_tb);
+        $dumpfile("mul.vcd");
+        $dumpvars(0, mul_tb);
         #350;
         $display("R1 = 0x%h (expected: 0x05)", R1);
         $display("R3 = 0x%h (expected: 0x10)", R3);
