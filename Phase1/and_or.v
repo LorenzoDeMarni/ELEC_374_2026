@@ -1,39 +1,30 @@
 module andFunction(input wire [31:0] A, B, output reg [31:0] result);
     integer i;
-    always @(*) begin
-        for (i = 0; i < 32; i = i + 1) begin
-            if (A[i] == 1'b1 && B[i] == 1'b1)
-                result[i] = 1'b1;
-            else
-                result[i] = 1'b0;
-        end
-    end
+	always @(*) begin
+		for (i = 0; i < 32; i = i + 1) begin
+			result[i] = A[i] & B[i]; // procedural AND
+		end
+	end
 endmodule
 
 
 module orFunction(input wire [31:0] A, B, output reg [31:0] result);
     integer i;
-    always @(*) begin
-        for (i = 0; i < 32; i = i + 1) begin
-            if (A[i] == 1'b1 || B[i] == 1'b1)
-                result[i] = 1'b1;
-            else
-                result[i] = 1'b0;
-        end
-    end
+	always @(*) begin
+		for (i = 0; i < 32; i = i + 1) begin
+			result[i] = A[i] | B[i]; // procedural OR
+		end
+	end
 endmodule
 
 
 module notFunction(input wire [31:0] A, output reg [31:0] result);
     integer i;
-    always @(*) begin
-        for (i = 0; i < 32; i = i + 1) begin
-            if (A[i] == 1'b1)
-                result[i] = 1'b0;
-            else
-                result[i] = 1'b1;
-        end
-    end
+	always @(*) begin
+		for (i = 0; i < 32; i = i + 1) begin
+			result[i] = !A[i]; // procedural NOT
+		end
+	end
 endmodule
 
 
