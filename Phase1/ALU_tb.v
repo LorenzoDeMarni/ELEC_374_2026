@@ -77,7 +77,7 @@ module ALU_tb;
     opSHL=0; opSHR=1; #5;  // SHR: 10110010 >> 2 = 00101100 (44)
     $display("SHR:  A=%b, B=%0d, Result=%b (expected 00101100)", input_a, input_b, ALU_result[31:0]);
   
-    input_a = 32'bA=10000100000000000000100010110010;  // 178
+    input_a = 63'b10000100000000000000100010110010;  // 178
     input_b = 32'd2;         // Shift amount
 
     opSHR=0; opROL=1; #5; // ROL: rotate left by 2
