@@ -152,7 +152,7 @@ ALU alu_instance(
 assign InPort_reg = 32'd0;
     
 //C sign extension (placeholder - extract from IR in Phase 2)
-assign C_sign_extended = 32'd0;
+assign C_sign_extended = {{13{IR_wire[18]}}, IR_wire[18:0]};
     
 //output assignments for monitoring
 assign R0 = R0_wire;   assign R1 = R1_wire;   assign R2 = R2_wire;   assign R3 = R3_wire;
