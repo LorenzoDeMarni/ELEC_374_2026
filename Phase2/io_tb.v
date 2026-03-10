@@ -33,10 +33,12 @@ module io_tb;
     wire [31:0] OutPort;
     wire CON;
 
-    parameter Default   = 3'b000,
-              Load_R7   = 3'b001,
-              OUT_T3    = 3'b010,
-              IN_T3     = 3'b011;
+    // State encoding: separate cycles to load R7 then drive OutPort
+    parameter Default    = 3'b000,
+              Load_R7_1  = 3'b001,  // write 0x12345678 into MDR
+              Load_R7_2  = 3'b010,  // MDR -> R7
+              OUT_T3     = 3'b011,  // R7 -> OutPort
+              IN_T3      = 3'b100;  // InPort -> R5
 
     reg [2:0] Present_state = Default;
 
@@ -76,11 +78,12 @@ module io_tb;
 
     always @(posedge clock) begin
         case (Present_state)
-            Default: Present_state = Load_R7;
-            Load_R7: Present_state = OUT_T3;
-            OUT_T3:  Present_state = IN_T3;
-            IN_T3:   Present_state = IN_T3;
-            default: Present_state = Default;
+            Default:   Present_state = Load_R7_1;
+            Load_R7_1: Present_state = Load_R7_2;
+            Load_R7_2: Present_state = OUT_T3;
+            OUT_T3:    Present_state = IN_T3;
+            IN_T3:     Present_state = IN_T3;
+            default:   Present_state = Default;
         endcase
     end
 
@@ -103,17 +106,19 @@ module io_tb;
             end
 
             // preload R7 with value to send to output
-            Load_R7: begin
+            Load_R7_1: begin
                 Mdatain = 32'h12345678;
                 Read = 1;
                 MDRin = 1;
             end
-
-            OUT_T3: begin
+            Load_R7_2: begin
                 MDRout  = 1;
                 R7in    = 1;        // R7 <= 0x12345678
-                // OUT R7
-                R7out   = 1;
+            end
+
+            OUT_T3: begin
+                // OUT R7: drive bus from R7 into OutPort register
+                R7out    = 1;
                 OutPortin = 1;
             end
 

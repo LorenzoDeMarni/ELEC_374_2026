@@ -33,11 +33,14 @@ module special_tb;
     wire [31:0] OutPort;
     wire CON;
 
-    parameter Default   = 3'b000,
-              Load_HI   = 3'b001,
-              Load_LO   = 3'b010,
-              MFHI_T3   = 3'b011,
-              MFLO_T3   = 3'b100;
+    // State encoding: separate cycles to load HI and LO
+    parameter Default    = 3'b000,
+              Load_HI_1  = 3'b001,  // write 0xAAAA0000 into MDR
+              Load_HI_2  = 3'b010,  // MDR -> HI
+              Load_LO_1  = 3'b011,  // write 0x0000BBBB into MDR
+              Load_LO_2  = 3'b100,  // MDR -> LO
+              MFHI_T3    = 3'b101,  // HI -> R5
+              MFLO_T3    = 3'b110;  // LO -> R1
 
     reg [2:0] Present_state = Default;
 
@@ -77,12 +80,14 @@ module special_tb;
 
     always @(posedge clock) begin
         case (Present_state)
-            Default:  Present_state = Load_HI;
-            Load_HI:  Present_state = Load_LO;
-            Load_LO:  Present_state = MFHI_T3;
-            MFHI_T3:  Present_state = MFLO_T3;
-            MFLO_T3:  Present_state = MFLO_T3;
-            default:  Present_state = Default;
+            Default:    Present_state = Load_HI_1;
+            Load_HI_1:  Present_state = Load_HI_2;
+            Load_HI_2:  Present_state = Load_LO_1;
+            Load_LO_1:  Present_state = Load_LO_2;
+            Load_LO_2:  Present_state = MFHI_T3;
+            MFHI_T3:    Present_state = MFLO_T3;
+            MFLO_T3:    Present_state = MFLO_T3;
+            default:    Present_state = Default;
         endcase
     end
 
@@ -104,17 +109,26 @@ module special_tb;
                 clear = 1;
             end
 
-            // preload HI with 0xAAAA0000
-            Load_HI: begin
+            // preload MDR with 0xAAAA0000, then load HI
+            Load_HI_1: begin
                 Mdatain = 32'hAAAA0000;
                 Read = 1;
                 MDRin = 1;
             end
-
-            // preload LO with 0x0000BBBB
-            Load_LO: begin
+            Load_HI_2: begin
                 MDRout = 1;
                 HIin   = 1;
+            end
+
+            // preload MDR with 0x0000BBBB, then load LO
+            Load_LO_1: begin
+                Mdatain = 32'h0000BBBB;
+                Read = 1;
+                MDRin = 1;
+            end
+            Load_LO_2: begin
+                MDRout = 1;
+                LOin   = 1;
             end
 
             MFHI_T3: begin

@@ -24,7 +24,8 @@ module datapath(
     input wire R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in,
     input wire R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in,
     input wire HIin, LOin, PCin, IRin, Yin, Zin, MARin, MDRin,
-
+    // output port load control
+    input wire OutPortin,
     //register control signals (out)
     input wire R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out,
     input wire R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out,
@@ -92,8 +93,10 @@ register32 reg_R14 (.clock(clock), .clear(clear), .enable(R14in), .BusMuxOut(Bus
 register32 reg_R15 (.clock(clock), .clear(clear), .enable(R15in), .BusMuxOut(BusMuxOut), .q(R15_wire));
     
 //special registers
-register32 reg_HI  (.clock(clock), .clear(clear), .enable(HIin),  .BusMuxOut(Z_reg[63:32]), .q(HI_wire));
-register32 reg_LO  (.clock(clock), .clear(clear), .enable(LOin),  .BusMuxOut(Z_reg[31:0]),  .q(LO_wire));
+// In Phase 2, HI/LO load from the main bus so that
+// Z results (or any other bus source) can be latched via control.
+register32 reg_HI  (.clock(clock), .clear(clear), .enable(HIin),  .BusMuxOut(BusMuxOut), .q(HI_wire));
+register32 reg_LO  (.clock(clock), .clear(clear), .enable(LOin),  .BusMuxOut(BusMuxOut), .q(LO_wire));
 register32 reg_PC  (.clock(clock), .clear(clear), .enable(PCin),  .BusMuxOut(BusMuxOut), .q(PC_wire));
 register32 reg_IR  (.clock(clock), .clear(clear), .enable(IRin),  .BusMuxOut(BusMuxOut), .q(IR_wire));
 register32 reg_MAR (.clock(clock), .clear(clear), .enable(MARin), .BusMuxOut(BusMuxOut), .q(MAR_wire));
