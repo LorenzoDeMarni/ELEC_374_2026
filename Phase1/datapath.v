@@ -24,8 +24,6 @@ module datapath(
     input wire R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in,
     input wire R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in,
     input wire HIin, LOin, PCin, IRin, Yin, Zin, MARin, MDRin,
-    // output port load control
-    input wire OutPortin,
     
     //register control signals (out)
     input wire R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out,
@@ -38,24 +36,14 @@ module datapath(
     //memory interface (Phase 1: simulation only)
     input wire Read,
     input wire [31:0] Mdatain,
-
-    // simple input port data (from external input device)
-    input wire [31:0] InPort_data,
-
-    // branch condition latch control
-    input wire CONin,
-
+    
     //outputs for monitoring (required for demo)
     output wire [31:0] R0, R1, R2, R3, R4, R5, R6, R7,
     output wire [31:0] R8, R9, R10, R11, R12, R13, R14, R15,
     output wire [31:0] HI, LO, PC_out, IR, MAR,
     output wire [31:0] Y,
     output wire [63:0] Z,
-    output wire [31:0] BusMuxOut_signal,
-    // output port for OUT instruction
-    output wire [31:0] OutPort,
-    // branch condition flag
-    output wire CON
+    output wire [31:0] BusMuxOut_signal
 );
 
 //internal wires
@@ -67,7 +55,6 @@ wire [31:0] Y_reg;
 wire [63:0] Z_reg;
 wire [31:0] PC_incremented;
 wire [63:0] ALU_result;
-wire [31:0] OutPort_reg;
 
 //register file instantiation (R0-R15)
 wire [31:0] R0_wire, R1_wire, R2_wire, R3_wire;
@@ -161,31 +148,11 @@ ALU alu_instance(
     .result(ALU_result)
 );
     
-
-// CON FF instantiation
-con_ff branch_condition(
-    .clk(clock),
-    .clr(clear),
-    .CONin(CONin),
-    .Bus(BusMuxOut),              // Connect to the bus
-    .IR_20_19(IR[20:19]),         // Extract bits 20-19 from IR
-    .CON(CON)                     // Output CON signal
-);
-// Input port: directly driven from external InPort_data
-assign InPort_reg = InPort_data;
+//InPort register (placeholder for phase 2)
+assign InPort_reg = 32'd0;
     
-//C sign extension for constant C field in IR (IR[18:0])
-//Sign-extend from bit 18 (MSB of C) to 32 bits
-assign C_sign_extended = {{13{IR_wire[18]}}, IR_wire[18:0]};
-
-// Output port register: captures bus value when used by OUT instruction
-register32 reg_OutPort(
-    .clock(clock),
-    .clear(clear),
-    .enable(OutPortin),
-    .BusMuxOut(BusMuxOut),
-    .q(OutPort_reg)
-);
+//C sign extension (placeholder - extract from IR in Phase 2)
+assign C_sign_extended = 32'd0;
     
 //output assignments for monitoring
 assign R0 = R0_wire;   assign R1 = R1_wire;   assign R2 = R2_wire;   assign R3 = R3_wire;
@@ -200,7 +167,6 @@ assign MAR = MAR_wire;
 assign Y = Y_reg;
 assign Z = Z_reg;
 assign BusMuxOut_signal = BusMuxOut;
-assign OutPort = OutPort_reg;
 
 endmodule
 
