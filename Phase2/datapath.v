@@ -24,8 +24,15 @@ module datapath(
     input wire R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in,
     input wire R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in,
     input wire HIin, LOin, PCin, IRin, Yin, Zin, MARin, MDRin,
+    //Phase 2 new input signals
+    input wire Write,
+    input wire Gra, Grb, Grc,
+    input wire [31:0] InPort_data,
+    input wire Rin, Rout, BAout,
+    input wire Strobe,
     // output port load control
     input wire OutPortin,
+
     //register control signals (out)
     input wire R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out,
     input wire R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out,
@@ -39,9 +46,8 @@ module datapath(
     input wire [31:0] Mdatain,
 
     // simple input port data (from external input device)
-    input wire [31:0] InPort_data,
 
-    // branch condition latch control
+    // branch condition latch control - Phase 2
     input wire CONin,
 
     //outputs for monitoring
@@ -51,10 +57,12 @@ module datapath(
     output wire [31:0] Y,
     output wire [63:0] Z,
     output wire [31:0] BusMuxOut_signal,
+
+    //Phase 2 new
     // output port for OUT instruction
     output wire [31:0] OutPort,
     // branch condition flag
-    output wire CON
+    output wire CONout
 );
 
 //internal wires
@@ -67,6 +75,7 @@ wire [63:0] Z_reg;
 wire [31:0] PC_incremented;
 wire [63:0] ALU_result;
 wire [31:0] OutPort_reg;
+wire [31:0] RAM_dataout;
 
 //register file instantiation (R0-R15)
 wire [31:0] R0_wire, R1_wire, R2_wire, R3_wire;
@@ -75,22 +84,27 @@ wire [31:0] R8_wire, R9_wire, R10_wire, R11_wire;
 wire [31:0] R12_wire, R13_wire, R14_wire, R15_wire;
 wire [31:0] HI_wire, LO_wire, PC_wire, IR_wire, MAR_wire;
 
-register32 reg_R0  (.clock(clock), .clear(clear), .enable(R0in),  .BusMuxOut(BusMuxOut), .q(R0_wire));
-register32 reg_R1  (.clock(clock), .clear(clear), .enable(R1in),  .BusMuxOut(BusMuxOut), .q(R1_wire));
-register32 reg_R2  (.clock(clock), .clear(clear), .enable(R2in),  .BusMuxOut(BusMuxOut), .q(R2_wire));
-register32 reg_R3  (.clock(clock), .clear(clear), .enable(R3in),  .BusMuxOut(BusMuxOut), .q(R3_wire));
-register32 reg_R4  (.clock(clock), .clear(clear), .enable(R4in),  .BusMuxOut(BusMuxOut), .q(R4_wire));
-register32 reg_R5  (.clock(clock), .clear(clear), .enable(R5in),  .BusMuxOut(BusMuxOut), .q(R5_wire));
-register32 reg_R6  (.clock(clock), .clear(clear), .enable(R6in),  .BusMuxOut(BusMuxOut), .q(R6_wire));
-register32 reg_R7  (.clock(clock), .clear(clear), .enable(R7in),  .BusMuxOut(BusMuxOut), .q(R7_wire));
-register32 reg_R8  (.clock(clock), .clear(clear), .enable(R8in),  .BusMuxOut(BusMuxOut), .q(R8_wire));
-register32 reg_R9  (.clock(clock), .clear(clear), .enable(R9in),  .BusMuxOut(BusMuxOut), .q(R9_wire));
-register32 reg_R10 (.clock(clock), .clear(clear), .enable(R10in), .BusMuxOut(BusMuxOut), .q(R10_wire));
-register32 reg_R11 (.clock(clock), .clear(clear), .enable(R11in), .BusMuxOut(BusMuxOut), .q(R11_wire));
-register32 reg_R12 (.clock(clock), .clear(clear), .enable(R12in), .BusMuxOut(BusMuxOut), .q(R12_wire));
-register32 reg_R13 (.clock(clock), .clear(clear), .enable(R13in), .BusMuxOut(BusMuxOut), .q(R13_wire));
-register32 reg_R14 (.clock(clock), .clear(clear), .enable(R14in), .BusMuxOut(BusMuxOut), .q(R14_wire));
-register32 reg_R15 (.clock(clock), .clear(clear), .enable(R15in), .BusMuxOut(BusMuxOut), .q(R15_wire));
+wire SE_R0in, SE_R1in, SE_R2in, SE_R3in, SE_R4in, SE_R5in, SE_R6in, SE_R7in;
+wire SE_R8in, SE_R9in, SE_R10in, SE_R11in, SE_R12in, SE_R13in, SE_R14in, SE_R15in;
+wire SE_R0out, SE_R1out, SE_R2out, SE_R3out, SE_R4out, SE_R5out, SE_R6out, SE_R7out;
+wire SE_R8out, SE_R9out, SE_R10out, SE_R11out, SE_R12out, SE_R13out, SE_R14out, SE_R15out;
+
+register32 reg_R0  (.clock(clock), .clear(clear), .enable(R0in | SE_R0in),  .BusMuxOut(BusMuxOut), .q(R0_wire));
+register32 reg_R1  (.clock(clock), .clear(clear), .enable(R1in | SE_R1in),  .BusMuxOut(BusMuxOut), .q(R1_wire));
+register32 reg_R2  (.clock(clock), .clear(clear), .enable(R2in | SE_R2in),  .BusMuxOut(BusMuxOut), .q(R2_wire));
+register32 reg_R3  (.clock(clock), .clear(clear), .enable(R3in | SE_R3in),  .BusMuxOut(BusMuxOut), .q(R3_wire));
+register32 reg_R4  (.clock(clock), .clear(clear), .enable(R4in | SE_R4in),  .BusMuxOut(BusMuxOut), .q(R4_wire));
+register32 reg_R5  (.clock(clock), .clear(clear), .enable(R5in | SE_R5in),  .BusMuxOut(BusMuxOut), .q(R5_wire));
+register32 reg_R6  (.clock(clock), .clear(clear), .enable(R6in | SE_R6in),  .BusMuxOut(BusMuxOut), .q(R6_wire));
+register32 reg_R7  (.clock(clock), .clear(clear), .enable(R7in | SE_R7in),  .BusMuxOut(BusMuxOut), .q(R7_wire));
+register32 reg_R8  (.clock(clock), .clear(clear), .enable(R8in | SE_R8in),  .BusMuxOut(BusMuxOut), .q(R8_wire));
+register32 reg_R9  (.clock(clock), .clear(clear), .enable(R9in | SE_R9in),  .BusMuxOut(BusMuxOut), .q(R9_wire));
+register32 reg_R10 (.clock(clock), .clear(clear), .enable(R10in | SE_R10in), .BusMuxOut(BusMuxOut), .q(R10_wire));
+register32 reg_R11 (.clock(clock), .clear(clear), .enable(R11in | SE_R11in), .BusMuxOut(BusMuxOut), .q(R11_wire));
+register32 reg_R12 (.clock(clock), .clear(clear), .enable(R12in | SE_R12in), .BusMuxOut(BusMuxOut), .q(R12_wire));
+register32 reg_R13 (.clock(clock), .clear(clear), .enable(R13in | SE_R13in), .BusMuxOut(BusMuxOut), .q(R13_wire));
+register32 reg_R14 (.clock(clock), .clear(clear), .enable(R14in | SE_R14in), .BusMuxOut(BusMuxOut), .q(R14_wire));
+register32 reg_R15 (.clock(clock), .clear(clear), .enable(R15in | SE_R15in), .BusMuxOut(BusMuxOut), .q(R15_wire));
     
 //special registers
 // In Phase 2, HI/LO load from the main bus so that
@@ -111,18 +125,41 @@ MDR mdr_unit(
     .MDRin(MDRin),
     .Read(Read),
     .BusMuxOut(BusMuxOut),
-    .Mdatain(Mdatain),
+    .Mdatain(RAM_dataout),
     .q(MDR_out)
+);
+
+ram ram_unit(
+    .clock(clock),
+    .Read(Read),
+    .Write(Write),
+    .address(MAR_wire[8:0]),
+    .DataIn(MDR_out),
+    .Mdataout(RAM_dataout)
 );
     
 pc_incrementer pc_inc(
     .pc_in(PC_wire),
     .pc_out(PC_incremented)
 );
+
+select_encode se_unit(
+    .IR(IR_wire),
+    .Gra(Gra), .Grb(Grb), .Grc(Grc),
+    .Rin(Rin), .Rout(Rout), .BAout(BAout),
+    .R0in(SE_R0in),   .R1in(SE_R1in),   .R2in(SE_R2in),   .R3in(SE_R3in),
+    .R4in(SE_R4in),   .R5in(SE_R5in),   .R6in(SE_R6in),   .R7in(SE_R7in),
+    .R8in(SE_R8in),   .R9in(SE_R9in),   .R10in(SE_R10in), .R11in(SE_R11in),
+    .R12in(SE_R12in), .R13in(SE_R13in), .R14in(SE_R14in), .R15in(SE_R15in),
+    .R0out(SE_R0out),   .R1out(SE_R1out),   .R2out(SE_R2out),   .R3out(SE_R3out),
+    .R4out(SE_R4out),   .R5out(SE_R5out),   .R6out(SE_R6out),   .R7out(SE_R7out),
+    .R8out(SE_R8out),   .R9out(SE_R9out),   .R10out(SE_R10out), .R11out(SE_R11out),
+    .R12out(SE_R12out), .R13out(SE_R13out), .R14out(SE_R14out), .R15out(SE_R15out)
+);
     
 //bus instantiation
 bus32 main_bus(
-    .BusMuxIn_R0(R0_wire),   .BusMuxIn_R1(R1_wire),   .BusMuxIn_R2(R2_wire),   .BusMuxIn_R3(R3_wire),
+    .BusMuxIn_R0(BAout ? 32'd0 : R0_wire),   .BusMuxIn_R1(R1_wire),   .BusMuxIn_R2(R2_wire),   .BusMuxIn_R3(R3_wire),
     .BusMuxIn_R4(R4_wire),   .BusMuxIn_R5(R5_wire),   .BusMuxIn_R6(R6_wire),   .BusMuxIn_R7(R7_wire),
     .BusMuxIn_R8(R8_wire),   .BusMuxIn_R9(R9_wire),   .BusMuxIn_R10(R10_wire), .BusMuxIn_R11(R11_wire),
     .BusMuxIn_R12(R12_wire), .BusMuxIn_R13(R13_wire), .BusMuxIn_R14(R14_wire), .BusMuxIn_R15(R15_wire),
@@ -132,10 +169,10 @@ bus32 main_bus(
     .BusMuxIn_MDR(MDR_out),
     .BusMuxIn_InPort(InPort_reg),
     .C_sign_extended(C_sign_extended),
-    .R0out(R0out),   .R1out(R1out),   .R2out(R2out),   .R3out(R3out),
-    .R4out(R4out),   .R5out(R5out),   .R6out(R6out),   .R7out(R7out),
-    .R8out(R8out),   .R9out(R9out),   .R10out(R10out), .R11out(R11out),
-    .R12out(R12out), .R13out(R13out), .R14out(R14out), .R15out(R15out),
+    .R0out(R0out | SE_R0out),   .R1out(R1out | SE_R1out),   .R2out(R2out | SE_R2out),   .R3out(R3out | SE_R3out),
+    .R4out(R4out | SE_R4out),   .R5out(R5out | SE_R5out),   .R6out(R6out | SE_R6out),   .R7out(R7out | SE_R7out),
+    .R8out(R8out | SE_R8out),   .R9out(R9out | SE_R9out),   .R10out(R10out | SE_R10out), .R11out(R11out | SE_R11out),
+    .R12out(R12out | SE_R12out), .R13out(R13out | SE_R13out), .R14out(R14out | SE_R14out), .R15out(R15out | SE_R15out),
     .HIout(HIout),   .LOout(LOout),
     .Zhighout(Zhighout), .Zlowout(Zlowout),
     .PCout(PCout),   .MDRout(MDRout), .InPortout(InPortout), .Cout(Cout),
@@ -168,12 +205,17 @@ con_ff branch_condition(
     .clr(clear),
     .CONin(CONin),
     .Bus(BusMuxOut),
-    .IR_20_19(IR[20:19]),
-    .CON(CON)
+    .IR_20_19(IR_wire[20:19]),
+    .CON(CONout)
 );
 
-// Input port: driven from external InPort_data
-assign InPort_reg = InPort_data;
+register32 reg_InPort(
+    .clock(clock),
+    .clear(clear),
+    .enable(Strobe),
+    .BusMuxOut(InPort_data),
+    .q(InPort_reg)
+);
 
 //C sign extension for constant C field in IR (IR[18:0])
 //Sign-extend from bit 18 (MSB of C) to 32 bits
